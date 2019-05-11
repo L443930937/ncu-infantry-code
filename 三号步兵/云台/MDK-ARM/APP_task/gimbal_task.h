@@ -14,12 +14,12 @@
 /* 本模块向外部提供的数据类型定义--------------------------------------------*/
 
 typedef struct{
-		//int16_t expect;
 		int32_t expect;
 		uint8_t	step;
 		uint8_t mode;
 		int32_t expect_pc;
 		int32_t expect_remote;
+		int32_t expect_remote_last;
     int16_t err;
 } Pos_Set;
 

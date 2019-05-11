@@ -165,7 +165,7 @@ void Gimbal_Contrl_Task(void const * argument)
         Gimbal.flag=0;
         yaw_tly_set.expect = tly.final_angle + minipc_rx.angle_yaw;
 			}
-      
+/*      
 			if(pit_get.angle>7770 )
       {
          pit_set.expect=  7750 - pit_get.offset_angle ;
@@ -175,7 +175,22 @@ void Gimbal_Contrl_Task(void const * argument)
          pit_set.expect=  6020 - pit_get.offset_angle ;
          pit_set.expect_remote = 6020-pit_get.offset_angle;
       }
-			
+*/
+			if (pit_get.angle < 5800)
+			{
+				if (pit_set.expect_remote >= pit_set.expect_remote_last)
+					goto pit_calc;
+				pit_set.expect_remote =  5800 - pit_get.offset_angle ;
+				pit_set.expect =	5800 - pit_get.offset_angle ;
+			}
+			else if (pit_get.angle > 7500)
+			{
+				if (pit_set.expect_remote <= pit_set.expect_remote_last)
+					goto pit_calc;
+				pit_set.expect_remote =  7500 - pit_get.offset_angle ;
+				pit_set.expect =	7500 - pit_get.offset_angle ;
+			}
+
 			switch(Gimbal.mode)//
 			{	
 				case 3: {
@@ -196,7 +211,7 @@ void Gimbal_Contrl_Task(void const * argument)
 					    Yaw_Current_Value= (-pid_yaw_jy901_spd.pos_out);
           
           			//pitÖá
-                    pid_calc(&pid_pit, pit_get.total_angle, pit_set.expect);
+					pit_calc:pid_calc(&pid_pit, pit_get.total_angle, pit_set.expect);
                     pid_calc(&pid_pit_jy901_spd,(imu_data.gz)/16.4, pid_pit.pos_out);
                 
               Pitch_Current_Value=(-pid_pit_jy901_spd.pos_out); 
@@ -216,7 +231,7 @@ void Gimbal_Contrl_Task(void const * argument)
 				break;
 				
 			}                                                                             
-		 		
+					pit_set.expect_remote_last = pit_set.expect_remote;
 					Cloud_Platform_Motor(&hcan1,Yaw_Current_Value,Pitch_Current_Value);
 			
 
