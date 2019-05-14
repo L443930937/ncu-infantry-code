@@ -63,6 +63,7 @@ DMA_HandleTypeDef hdma_adc2;
 DMA_HandleTypeDef hdma_adc3;
 
 /* ADC1 init function */
+/* ADC1 init function */
 void MX_ADC1_Init(void)
 {
   ADC_ChannelConfTypeDef sConfig;
@@ -165,7 +166,6 @@ void MX_ADC3_Init(void)
   {
     Error_Handler();
   }
-
 }
 void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
 {

@@ -9,7 +9,7 @@
 #include "arm_math.h"
 #include "user_lib.h"
    
-#define Middle_angle  2476   
+#define Middle_angle  1150   
 
 typedef uint8_t 	u8;
 typedef uint16_t 	u16;

@@ -79,14 +79,14 @@ void RemoteControlProcess()
                      Shoot.mode=1;
                      if(shoot.out == 128) 
                   bopan.mode=1;    
-                   
-                     
+                   Set_AX6(7,819,0x3ff);  //逆时针角度   240°
                 }
                 else if(RC_Ctl.rc.s1==2)
                 {
                      Shoot.mode=3;
                      if(shoot.out == 112) 
-                  bopan.mode=3;    
+                  bopan.mode=3;   
+                  Set_AX6(7,512,0x3ff);    //逆时针角度   150°
                   
                 }else 
                 {
@@ -112,16 +112,17 @@ void MouseKeyControlProcess()
   //测试视觉
 //                Minipc.flag=2;
 //                Minipc.mode=2;
-  
+  /*
                 Minipc.flag=1;
                 Minipc.mode=1;
+	*/
   //测试视觉
   
   
   
 					//鼠标（移动速度*1000/50）
 					pit_set.expect_remote = pit_set.expect_remote+RC_Ctl.mouse.y*2.0f;	
-					yaw_tly_set.expect_remote = yaw_tly_set.expect_remote-RC_Ctl.mouse.x*2.0f;	
+					yaw_tly_set.expect_remote = yaw_tly_set.expect_remote-RC_Ctl.mouse.x*1.0f;	
 				
 					
 					if(RC_Ctl.mouse.press_l==1)        //鼠标左键发射
@@ -135,14 +136,30 @@ void MouseKeyControlProcess()
                   
              }
                 
+					if(RC_Ctl.rc.s1==1)
+					{
+                Minipc.flag=1;
+                Minipc.mode=1;
+					}
+					else if (RC_Ctl.rc.s1==2)
+					{
+                Minipc.flag=2;
+                Minipc.mode=2;
+					}
+					else
+					{
+                Minipc.flag=0;
+                Minipc.mode=0;
+					}
+
 //        if(RC_Ctl.key.v & 0x2000)
 //        {
 //              Minipc.flag=2;
 //              Minipc.mode=2;
 //        }else if(RC_Ctl.mouse.press_r==1)
 //          {
-//                Minipc.flag=1;
-//                Minipc.mode=1;
+//                Minipc.flag=2;
+//                Minipc.mode=2;
 //          }else 
 //          {
 //                Minipc.flag=0;
@@ -211,12 +228,12 @@ void MouseKeyControlProcess()
                            Gimbal.mode = 1; 
                          }
                                  
-                         if(RC_Ctl.key.v & 0x20  &&  RC_Ctl.key.v & 0x800 )//ctrl+V
+                         if(RC_Ctl.key.v & 0x20  &&  RC_Ctl.key.v & 0x4000 )//ctrl+V
                          {
-                                Set_AX6(7,0x33B,0x3ff);
+														 Set_AX6(7,819,0x3ff);  //逆时针角度   240°
                          }else if( RC_Ctl.key.v & 0x4000 )//V
                          {
-                             Set_AX6(7,0x1FC,0x3ff);
+														 Set_AX6(7,512,0x3ff);    //逆时针角度   150°
                          }
                          
                          CAN_Send_cilent(&hcan2,Shoot_mouse.mode,0,0,0);
@@ -370,7 +387,8 @@ void MiniPC_Data_task(void const * argument)
 											pit_set.expect_pc=minipc_rx.angle_pit;
 
                      }
-										else if( frist_flag && my_abs(pit_set.err)<10&& my_abs(yaw_set.err)<15)//误差不能设置的太大
+//										else if( frist_flag && my_abs(pit_set.err)<10&& my_abs(yaw_set.err)<15)//误差不能设置的太大
+										else if( frist_flag )//误差不能设置的太大
 											{
 										    
 									   			yaw_set.expect_pc=minipc_rx.angle_yaw ;               

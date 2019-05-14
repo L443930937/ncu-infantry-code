@@ -87,7 +87,7 @@ void gimbal_pid_init(void)
                   2.0f, 0.0f, 0.0f );
   
   PID_struct_init(&pid_yaw_jy901, POSITION_PID, 5000, 500,
-                3.0f, 0.02f, 5.0f); 
+                4.0f, 0.02f, 5.0f); 
   PID_struct_init(&pid_yaw_jy901_spd, POSITION_PID, 5000, 500,
                 2.0, 0.0f, 1.0f );	
 	
@@ -127,7 +127,8 @@ void Gimbal_Contrl_Task(void const * argument)
 		 	
 			if(Minipc.flag == 2)   //打符
 			{
-            Gimbal.mode=3;
+           // Gimbal.mode=3;
+						Gimbal.mode = 4;  //修改为4
             yaw_set.expect = yaw_set.expect_pc;
             pit_set.expect = pit_set.expect_pc;
         
@@ -149,18 +150,20 @@ void Gimbal_Contrl_Task(void const * argument)
 			}
 			
 			
-			if(yaw_get.angle<500 )//云台超限处理 you
-			{
-            yaw_set.expect=500-yaw_get.offset_angle;
-            Gimbal.mode=3;
-            Gimbal.flag=2;     //超限标志位
-			}else if(yaw_get.angle>4490) //zuo
-			{
-            yaw_set.expect=  4490 - yaw_get.offset_angle ;
-            Gimbal.mode=3;
-            Gimbal.flag=2;     //超限标志位       
-			}
-			else if ( Gimbal.flag == 2)
+//			if(yaw_get.angle > 2960 && yaw_get.angle < 5000 )//云台超限处理 you
+//			{
+//            yaw_set.expect=2900-yaw_get.offset_angle;
+//            Gimbal.mode=3;
+//            Gimbal.flag=2;     //超限标志位
+//			}else if(yaw_get.angle > 5000 && yaw_get.angle < 7280) //zuo
+//			{
+//            yaw_set.expect=  7330 - yaw_get.offset_angle ;
+//            Gimbal.mode=3;
+//            Gimbal.flag=2;     //超限标志位       
+//			}
+//			else 
+				
+			if ( Gimbal.flag == 2)
 			{   
         Gimbal.flag=0;
         yaw_tly_set.expect = tly.final_angle + minipc_rx.angle_yaw;
@@ -193,13 +196,26 @@ void Gimbal_Contrl_Task(void const * argument)
 
 			switch(Gimbal.mode)//
 			{	
-				case 3: {
-					          
-										 pid_calc(&pid_yaw, yaw_get.total_angle, yaw_set.expect);
+				case 4:
+				{
+										 pid_calc(&pid_yaw, yaw_get.total_angle, yaw_set.expect+2500-yaw_get.offset_angle);
 										 pid_calc(&pid_yaw_spd,(imu_data.gx)/30, pid_yaw.pos_out);
 					    Yaw_Current_Value= (-pid_yaw_spd.pos_out);
           
-                     pid_calc(&pid_pit_dashen, pit_get.total_angle, pit_set.expect);
+                     pid_calc(&pid_pit_dashen, pit_get.total_angle, pit_set.expect+7050-pit_get.offset_angle);
+                     pid_calc(&pid_pit_dashen_spd,(imu_data.gz)/16.4, pid_pit_dashen.pos_out);
+                
+              Pitch_Current_Value=(-pid_pit_dashen_spd.pos_out); 
+				}break;
+				case 3: {
+					          
+//										 pid_calc(&pid_yaw, yaw_get.total_angle, yaw_set.expect+2500-yaw_get.offset_angle);
+											pid_calc(&pid_yaw, yaw_get.total_angle, yaw_set.expect);
+										 pid_calc(&pid_yaw_spd,(imu_data.gx)/30, pid_yaw.pos_out);
+					    Yaw_Current_Value= (-pid_yaw_spd.pos_out);
+          
+//                     pid_calc(&pid_pit_dashen, pit_get.total_angle, pit_set.expect+7050-pit_get.offset_angle);
+										pid_calc(&pid_pit_dashen, pit_get.total_angle, pit_set.expect);
                      pid_calc(&pid_pit_dashen_spd,(imu_data.gz)/16.4, pid_pit_dashen.pos_out);
                 
               Pitch_Current_Value=(-pid_pit_dashen_spd.pos_out); 
@@ -229,10 +245,11 @@ void Gimbal_Contrl_Task(void const * argument)
 				        }break;
 				default:
 				break;
-				
+	
 			}                                                                             
 					pit_set.expect_remote_last = pit_set.expect_remote;
-					Cloud_Platform_Motor(&hcan1,Yaw_Current_Value,Pitch_Current_Value);
+
+			Cloud_Platform_Motor(&hcan1,Yaw_Current_Value,Pitch_Current_Value);
 			
 
 			osDelayUntil(&xLastWakeTime, GIMBAL_PERIOD);

@@ -59,6 +59,7 @@ static CanTxMsgTypeDef  CANSend_Cilent;
 void Cloud_Platform_Motor(CAN_HandleTypeDef * hcan,int16_t yaw,int16_t	pitch)
 {
 		Cloud_Platform_Data.StdId = 0x1FF;
+//		Cloud_Platform_Data.StdId = 0x3F0;
 		Cloud_Platform_Data.IDE = CAN_ID_STD;
 		Cloud_Platform_Data.RTR = CAN_RTR_DATA;
 		Cloud_Platform_Data.DLC = 0X08;

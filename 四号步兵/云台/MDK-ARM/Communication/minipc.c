@@ -71,12 +71,16 @@ void Get_MiniPC_Data(void)
 	**************************************************************
 **/
 
-void Send_MiniPC_Data(uint8_t cmd1,uint8_t cmd2,float state)
+void Send_MiniPC_Data(uint8_t flag1,uint8_t flag2,uint16_t yaw_angle , uint16_t pit_angle ,uint8_t color)
 {
 	minipc_tx.frame_header = 0xFF;
-	minipc_tx.cmd1 			   = cmd1;
-	minipc_tx.cmd2 				 = cmd1;
-  
+	minipc_tx.cmd1 			   = flag1;
+	minipc_tx.cmd2 				 = flag2;
+  minipc_tx.cmd3         = yaw_angle>>8;
+  minipc_tx.cmd4         = yaw_angle;
+  minipc_tx.cmd5         = pit_angle>>8;
+  minipc_tx.cmd6         = pit_angle; 
+  minipc_tx.cmd6         = color; 
 	minipc_tx.frame_tail   = 0xFE;
 	
 	HAL_UART_Transmit(&huart6,(uint8_t *)&minipc_tx,sizeof(minipc_tx),10);

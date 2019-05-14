@@ -79,9 +79,8 @@ void RemoteControlProcess()
                      Shoot.mode=1;
                      if(shoot.out == 130) 
                   bopan.mode=1;    
-                   Set_AX6(2,0x0ff,0xff);
-//        					Minipc.flag=1;
-//       						Minipc.mode=1;
+                   Set_AX6(2,830,0x3ff);  //逆时针角度   240°
+
                      
                 }
                 else if(RC_Ctl.rc.s1==2)
@@ -89,7 +88,7 @@ void RemoteControlProcess()
                      Shoot.mode=3;
                      if(shoot.out == 115) 
                   bopan.mode=3;    
-                  Set_AX6(2,0x3ff,0xff);
+                  Set_AX6(2,512,0x3ff);    //逆时针角度   150°
                 }else 
                 {
 							    bopan.mode=0;
@@ -111,12 +110,25 @@ void MouseKeyControlProcess()
 {
 			static uint8_t shut_flag;
       static uint8_t shoot_mouse_flg;
-//  					Minipc.flag=2;
-//						Minipc.mode=2;
+					if(RC_Ctl.rc.s1==1)
+					{
+                Minipc.flag=1;
+                Minipc.mode=1;
+					}
+					else if (RC_Ctl.rc.s1==2)
+					{
+                Minipc.flag=2;
+                Minipc.mode=2;
+					}
+					else
+					{
+                Minipc.flag=0;
+                Minipc.mode=0;
+					}
 //	
 					//鼠标（移动速度*1000/50）
 					pit_set.expect_remote = pit_set.expect_remote+RC_Ctl.mouse.y*1.7;	
-					yaw_tly_set.expect_remote = yaw_tly_set.expect_remote-RC_Ctl.mouse.x*2;	
+					yaw_tly_set.expect_remote = yaw_tly_set.expect_remote-RC_Ctl.mouse.x*1.0f;	
 				
 					
 					if(RC_Ctl.mouse.press_l==1)        //鼠标左键发射
@@ -185,7 +197,13 @@ void MouseKeyControlProcess()
                            
                          }
                          
-                        
+                         if(RC_Ctl.key.v & 0x20  &&  RC_Ctl.key.v & 0x4000 )//ctrl+V
+                         {
+														 Set_AX6(2,819,0x3ff);  //逆时针角度   240° 关
+                         }else if( RC_Ctl.key.v & 0x4000 )//V
+                         {
+														 Set_AX6(2,512,0x3ff);    //逆时针角度   150°
+                         }
                          
                          
                          
@@ -239,7 +257,7 @@ void Remote_Data_Task(void const * argument)
 			
 			RefreshTaskOutLineTime(RemoteDataTask_ON);
 			Remote_Ctrl();
-			Send_MiniPC_Data(Minipc.flag,Minipc.mode,0);
+			Send_MiniPC_Data(0,Minipc.flag,yaw_get.offset_angle,pit_get.offset_angle,0);
 			CAN_Send_YK(&hcan2,RC_Ctl.key.v,RC_Ctl.rc.ch0,RC_Ctl.rc.ch1,RC_Ctl.rc.s1,RC_Ctl.rc.s2);
 				switch(RC_Ctl.rc.s2)
 				{

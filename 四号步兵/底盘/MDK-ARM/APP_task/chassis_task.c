@@ -122,11 +122,11 @@ void Chassis_Contrl_Task(void const * argument)
 			case 3 : 
       { //扭腰
 				
-				if(yaw_get.angle<4500)      
+				if(yaw_get.angle<3387)      
 				{
 					niuyao_flag=0;
 				}
-				if(yaw_get.angle>6500)
+				if(yaw_get.angle>4387)
 				{
 					niuyao_flag=1;
 				}
@@ -134,33 +134,33 @@ void Chassis_Contrl_Task(void const * argument)
 				if(niuyao_flag) 
 				{
 					
-					  Speed_W-=50; 
-					        if(Speed_W<-2200)  Speed_W=-2200;
+					  Speed_W-=60; 
+					        if(Speed_W<-2600)  Speed_W=-2600;
 						
 				}
 				else 
 				{
 					
-					  Speed_W+=50;
-					         if(Speed_W>2200) Speed_W=2200;
+					  Speed_W+=60;
+					         if(Speed_W>2600) Speed_W=2600;
 					
           
 				}
         
         //扭腰模式下的XY模式限幅
-        if(moto_3508_set.dstVmmps_X>1000)
+        if(moto_3508_set.dstVmmps_X>1500)
         {
-          moto_3508_set.dstVmmps_X = 1000;
-        }else if(moto_3508_set.dstVmmps_X<-1000)
+          moto_3508_set.dstVmmps_X = 1500;
+        }else if(moto_3508_set.dstVmmps_X<-1500)
         {
-           moto_3508_set.dstVmmps_X = -1000;
+           moto_3508_set.dstVmmps_X = -1500;
         }   
-        if(moto_3508_set.dstVmmps_Y>1000)
+        if(moto_3508_set.dstVmmps_Y>1500)
         {
-          moto_3508_set.dstVmmps_Y = 1000;
-        }else if(moto_3508_set.dstVmmps_Y<-1000)
+          moto_3508_set.dstVmmps_Y = 1500;
+        }else if(moto_3508_set.dstVmmps_Y<-1500)
         {
-           moto_3508_set.dstVmmps_Y = -1000;
+           moto_3508_set.dstVmmps_Y = -1500;
         }
 
         Speed_X = moto_3508_set.dstVmmps_X*arm_cos_f32(-Angle_gap*radian_ratio)+moto_3508_set.dstVmmps_Y*arm_sin_f32(-Angle_gap*radian_ratio);

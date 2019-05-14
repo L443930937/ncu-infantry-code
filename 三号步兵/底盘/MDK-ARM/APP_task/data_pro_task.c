@@ -89,14 +89,19 @@ void MouseKeyControlProcess()
 	if(RC_Ctl.key.v & 0x10 )// 
 					{
 
-						XY_speed_max = 5000;//(NORMAL_SPEED_MAX)*3.5;
-						XY_speed_min = -5000;//(NORMAL_SPEED_MIN)*3.5;
+						XY_speed_max = 6000;//(NORMAL_SPEED_MAX)*3.5;
+						XY_speed_min = -6000;//(NORMAL_SPEED_MIN)*3.5;
 					}else 
 					{
-							XY_speed_max = 3000;//(NORMAL_SPEED_MAX)*3.5;
-						XY_speed_min = -3000;//(NORMAL_SPEED_MIN)*3.5;
+							XY_speed_max = 4000;//(NORMAL_SPEED_MAX)*3.5;
+						XY_speed_min = -4000;//(NORMAL_SPEED_MIN)*3.5;
 					}
-			
+		
+ if(RC_Ctl.key.v & 0x20 )
+ {
+						XY_speed_max = 1500;//(NORMAL_SPEED_MAX)*3.5;
+						XY_speed_min = -1500;//(NORMAL_SPEED_MIN)*3.5;
+ }
 					if(RC_Ctl.key.v & 0x01)                       moto_3508_set.dstVmmps_Y += ACC_SPEED;//按下W键
 					else if(RC_Ctl.key.v & 0x02)                  moto_3508_set.dstVmmps_Y -= ACC_SPEED;//按下S键
 					else{  
@@ -175,8 +180,8 @@ void Remote_Data_Task(void const * argument)
 				}					
 				
 			VAL_LIMIT(moto_3508_set.dstVmmps_W, W_speed_min, W_speed_max);
-      VAL_LIMIT(moto_3508_set.dstVmmps_Y, -6000, 6000);
-			VAL_LIMIT(moto_3508_set.dstVmmps_X, -6000, 6000);
+      VAL_LIMIT(moto_3508_set.dstVmmps_Y, XY_speed_min, XY_speed_max);
+			VAL_LIMIT(moto_3508_set.dstVmmps_X, XY_speed_min, XY_speed_max);
 
        press_counter++;
 		

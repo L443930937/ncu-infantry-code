@@ -46,6 +46,9 @@ void BSP_Init(void)
 	SystemState_Inite();
   /*ADC*/
 	MX_ADC1_Init();
+	MX_ADC2_Init();
+	MX_ADC3_Init();
+	
 	/*´®¿Ú*/
     MX_USART3_UART_Init();
     MX_USART6_UART_Init();

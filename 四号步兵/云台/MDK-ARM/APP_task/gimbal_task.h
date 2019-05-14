@@ -20,6 +20,7 @@ typedef struct{
 		uint8_t mode;
 		int32_t expect_pc;
 		int32_t expect_remote;
+		int32_t expect_remote_last;
     int16_t err;
 } Pos_Set;
 

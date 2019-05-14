@@ -89,14 +89,20 @@ void MouseKeyControlProcess()
 	if(RC_Ctl.key.v & 0x10 )// 
 					{
 
-						XY_speed_max = 5000;//(NORMAL_SPEED_MAX)*3.5;
-						XY_speed_min = -5000;//(NORMAL_SPEED_MIN)*3.5;
+						XY_speed_max = 6000;//(NORMAL_SPEED_MAX)*3.5;
+						XY_speed_min = -6000;//(NORMAL_SPEED_MIN)*3.5;
 					}else 
 					{
-							XY_speed_max = 3000;//(NORMAL_SPEED_MAX)*3.5;
-						XY_speed_min = -3000;//(NORMAL_SPEED_MIN)*3.5;
+							XY_speed_max = 4000;//(NORMAL_SPEED_MAX)*3.5;
+						XY_speed_min = -4000;//(NORMAL_SPEED_MIN)*3.5;
 					}
-			
+ if(RC_Ctl.key.v & 0x20 )
+ {
+						XY_speed_max = 1500;//(NORMAL_SPEED_MAX)*3.5;
+						XY_speed_min = -1500;//(NORMAL_SPEED_MIN)*3.5;
+ }
+ 
+ 
 					if(RC_Ctl.key.v & 0x01)                       moto_3508_set.dstVmmps_Y += ACC_SPEED;//按下W键
 					else if(RC_Ctl.key.v & 0x02)                  moto_3508_set.dstVmmps_Y -= ACC_SPEED;//按下S键
 					else{  

@@ -122,11 +122,11 @@ void Chassis_Contrl_Task(void const * argument)
 			case 3 : 
       { //扭腰
 				
-				if(yaw_get.angle<1470)      
+				if((yaw_get.angle<550) || (yaw_get.angle>5000))      
 				{
 					niuyao_flag=0;
 				}
-				if(yaw_get.angle>3470)
+				if((yaw_get.angle>1750) && (yaw_get.angle<5000))
 				{
 					niuyao_flag=1;
 				}
@@ -134,17 +134,16 @@ void Chassis_Contrl_Task(void const * argument)
 				if(niuyao_flag) 
 				{
 					
-					  Speed_W+=50; 		        
-						if(Speed_W>2200) Speed_W=2200;
+					  Speed_W+=60; 		        
+						if(Speed_W>2400) Speed_W=2400;
 				}
 				else 
 				{
 					
-					  Speed_W-=50;
-					if(Speed_W<-2200)  Speed_W=-2200;
+					  Speed_W-=60;
+					if(Speed_W<-2400)  Speed_W=-2400;
           
 				}
-        
         //扭腰模式下的XY模式限幅
         if(moto_3508_set.dstVmmps_X>1500)
         {

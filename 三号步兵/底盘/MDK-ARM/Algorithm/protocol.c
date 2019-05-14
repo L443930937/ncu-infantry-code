@@ -252,7 +252,7 @@ void sendata(void)
   custom_data_t.cilent_id = blue_Infantry_3;//客户端id
   
 	custom_data_t.data1 = Shoot_mouse.mode;
-	custom_data_t.data2 = 2.0f;
+	custom_data_t.data2 = current_get.Capacitance_Volt;
 	custom_data_t.data3 = 2.0f;
   custom_data_t.masks = 0;
 	Send_FrameData(custom_data,(uint8_t *)&custom_data_t,sizeof(client_custom_data_t));	
